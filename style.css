@@ -1,0 +1,49 @@
+body {
+  font-family: monospace;
+  margin: 0;
+  padding: 10px;
+}
+
+body.mistake {
+  background-color: #FF5555;
+}
+
+div {
+  margin: 10px;
+}
+
+#message {
+  font-size: 16px;
+}
+
+.danger {
+  color: #FF0000;
+}
+
+.primary {
+  color: #337ab7;
+}
+
+#editable {
+  pointer-events: none;
+}
+
+button {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  margin: 20px 0;
+  padding: 10px 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
+
+#start {
+  background-color: #4CAF50; /* Green */ 
+}
+
+#reset {
+  background-color: #0000FF; /* Blue */
+}
