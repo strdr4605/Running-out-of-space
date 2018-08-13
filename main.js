@@ -1,11 +1,16 @@
 "use strict";
 let caretInterval;
-let spacesAmount;
-let gameText;
+let spacesAmount; // Number of available spaces
+let gameText; // Main text for the game
 let noSpaceText;
-let spaceIndices;
+let spaceIndices; // Indices of spaces in gameText
 
 // Caret
+/**
+ * 
+ * @param {object} win - window object
+ * @param {number} charCount - number of chars to skip
+ */
 function moveCaret(win, charCount) {
   let selection;
   if (win.getSelection) {
@@ -18,6 +23,10 @@ function moveCaret(win, charCount) {
   }
 }
 
+/**
+ * 
+ * @param {object} win - window object
+ */
 function resetCaret(win) {
   let selection;
   if (win.getSelection) {
@@ -27,6 +36,11 @@ function resetCaret(win) {
   }
 }
 
+/**
+ * 
+ * @param {object} win - window object 
+ * @returns {number} Current position of the caret
+ */
 function caterPosition(win) {
   let selection;
   if (win.getSelection) {
@@ -43,6 +57,7 @@ let noSpaceTextDiv = document.getElementById("editable");
 let messageDiv = document.getElementById("message");
 let sampleDiv = document.getElementById("sample");
 
+// Starting the game
 startBtn.onclick = (e) => {
   noSpaceTextDiv.focus();
   resetCaret(window);
@@ -52,18 +67,20 @@ startBtn.onclick = (e) => {
   }, 500);
 }
 
+// Reloading the game
 resetBtn.onclick = (e) => {
   clearInterval(caretInterval);
   noSpaceTextDiv.focus();
   // location.reload();
 }
 
+// Handle input for editable div
 noSpaceTextDiv.onkeypress = (e) => {
   e = e || window.event;
   let charCode = e.which || e.keyCode;
   // Check if Space was pressed
   if (charCode == 32) {
-      console.log(noSpaceTextDiv.innerText.split(''));
+      // console.log(noSpaceTextDiv.innerText.split(''));
       return true;
     } else {
       mistake();
@@ -86,11 +103,20 @@ document.onkeydown = function(ev)
   }
 }
 
+/**
+ * 
+ * @param {number} n - Amount of score change
+ */
 function changeScore(n) {
   spacesAmount += n;
   messageDiv.innerHTML = `You have ${spacesAmount} spaces!!!`;
 }
 
+/**
+ * 
+ * @param {string} str - String to parse
+ * @returns {Array<number>} Indices for every space in a string
+ */
 function getSpaceIndices(str) {
   let indices = [];
   for( let i = 0; i < str.length; i++) {
@@ -99,6 +125,7 @@ function getSpaceIndices(str) {
   return indices;
 }
 
+// Change background-color if player made a mistake
 function mistake() {
   let body = document.getElementsByTagName('body')[0];
   body.classList.add('mistake');
@@ -107,9 +134,10 @@ function mistake() {
   }, 100);
 }
 
+// Executed when text was loaded
 function load(text) {
   gameText = text;
-  spacesAmount = gameText.match(/([\s]+)/g).length + 2;
+  spacesAmount = gameText.match(/([\s]+)/g).length + 2; // Spaces in game text + 2 (for reserve)
   noSpaceText = gameText.replace(/ /gi, '');
   spaceIndices = getSpaceIndices(gameText);
   sampleDiv.innerHTML = gameText;
@@ -117,14 +145,11 @@ function load(text) {
   messageDiv.innerHTML = `You have ${spacesAmount} spaces!!!`;
 }
 
-fetch(window.location.href + '/text.txt')
+//   fetching game text from file
+fetch('/text.txt')
   .then(response => response.text())
   .then(load)
-
-if(spacesAmount < 3) {
-  messageDiv.classList.add('danger');
-  messageDiv.classList.remove('primary');
-} else {
-  messageDiv.classList.add('primary');
-  messageDiv.classList.remove('danger');
-}
+  .catch( error => fetch('Running-out-of-space/text.txt') // handle github url
+                    .then(response => response.text())
+                    .then(load)
+);
