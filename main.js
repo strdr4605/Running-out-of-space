@@ -117,10 +117,9 @@ function load(text) {
   messageDiv.innerHTML = `You have ${spacesAmount} spaces!!!`;
 }
 
-fetch('/text.txt')
+fetch(window.location.href + '/text.txt')
   .then(response => response.text())
-  .then(load);
-
+  .then(load)
 
 if(spacesAmount < 3) {
   messageDiv.classList.add('danger');
